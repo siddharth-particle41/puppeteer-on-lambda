@@ -1,5 +1,5 @@
-import * as puppeteer from 'puppeteer';
 import Chromium from 'chrome-aws-lambda';
+import * as playwright from 'playwright-aws-lambda';
 
 export class Test {
     constructor() {
@@ -7,14 +7,15 @@ export class Test {
     }
     async testBot(isHeadless: boolean = false) {
         console.log('Starting test');
-        const browser= await Chromium.puppeteer.launch({
-            args: Chromium.args,
-            defaultViewport: Chromium.defaultViewport,
-            executablePath: await Chromium.executablePath,
-            headless: Chromium.headless,
-        });
-        // const browser = await puppeteer.launch({ headless: isHeadless, args: ['--no-sandbox', '--disable-setuid-sandbox']});
-        const page = await browser.newPage();
+        const browser = await playwright.launchChromium();
+        console.log(`Browser is: ${browser}`);
+        // const browser = await Chromium.puppeteer.launch({
+        //     args: Chromium.args,
+        //     defaultViewport: Chromium.defaultViewport,
+        //     executablePath: await Chromium.executablePath,
+        //     headless: Chromium.headless,
+        // });
+        const page = await browser.newPage({ strictSelectors: false });
         console.log('Calling google.com');
         await page.goto('https://www.google.com');
         console.log('Taking screenshot');

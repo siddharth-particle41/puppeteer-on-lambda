@@ -1,4 +1,3 @@
-import 'source-map-support/register';
 import { Test } from './p41/app/test';
 
 const test = new Test();
