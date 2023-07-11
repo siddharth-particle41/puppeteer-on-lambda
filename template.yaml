@@ -1,0 +1,70 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Puppeteer Bucket
+
+Parameters:
+
+  FunctionNamePrefix:
+    Type: String
+    Description: Name prefix for the lambda functions
+    Default: puppeteer-bot
+
+  BucketName:
+    Type: String
+    Description: Name of the S3 bucket
+    Default: puppeteer-bot-bot-bucket
+
+Conditions:
+  GenerateBucketName: !Equals [!Ref BucketName, ""]
+
+Resources:
+
+  PuppeteerBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !If
+        - GenerateBucketName
+        - !Ref AWS::NoValue
+        - !Ref BucketName
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  PuppeteerFunctionForTesting:
+    Type: AWS::Serverless::Function
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./
+      Dockerfile: Dockerfile
+      DockerBuildArgs:
+        APP: puppeteerapp
+    Properties:
+      FunctionName: !Sub ${FunctionNamePrefix}-H-India-T
+      MemorySize: 1024
+      Timeout: 900
+      PackageType: Image
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref PuppeteerBucket
+      Events:
+        CronToday:
+          Type: Schedule
+          Properties:
+            Name: !Sub ${FunctionNamePrefix}-H-India-T
+            Schedule: 'rate(1 minute)'
+            # Schedule: 'cron(0/5 6-18 ? * MON-FRI *)'
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref PuppeteerBucket
+          CONDITION: 'tomorrow'
+          SHEET_ID: '1lK4Ew1wMgJe4whn4xJHh5vKlCQUkjT4RaQ5LUXbPjiA'
+          SHEET_NAME: 'INDIA-Holiday'
+          SLACK_GENERAL_CHANNEL: 'https://hooks.slack.com/services/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'
+          SLACK_P41_CHANNEL: 'https://hooks.slack.com/services/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'
