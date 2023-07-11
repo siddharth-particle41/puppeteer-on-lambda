@@ -46,7 +46,7 @@ Resources:
       DockerBuildArgs:
         APP: puppeteerapp
     Properties:
-      FunctionName: !Sub ${FunctionNamePrefix}-H-India-T
+      FunctionName: !Sub ${FunctionNamePrefix}-Test
       MemorySize: 1024
       Timeout: 900
       PackageType: Image
@@ -57,7 +57,7 @@ Resources:
         CronToday:
           Type: Schedule
           Properties:
-            Name: !Sub ${FunctionNamePrefix}-H-India-T
+            Name: !Sub ${FunctionNamePrefix}-Test
             Schedule: 'rate(1 minute)'
             # Schedule: 'cron(0/5 6-18 ? * MON-FRI *)'
       Environment:
