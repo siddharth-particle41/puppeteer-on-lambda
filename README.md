@@ -2,7 +2,6 @@
 
 This project contains source code and supporting files for a serverless application that can be deployed with the AWS Serverless Application Model Command Line Interface (SAM CLI).
 
-The application gives a Slack message once Covid-19 vaccines are available by area pin code.
 
 ## To execute on local machine
 
@@ -10,8 +9,6 @@ The application gives a Slack message once Covid-19 vaccines are available by ar
 2. Once above are installed, clone the project to your directory.
 3. Run the command `npm install` (this is will install all the required dependent resources)
 4. Run `npm run local` will execute the script.
-
-If slots are available for a specified pin code there will be a slack notification on p41 channels `#covid-19-vaccination-update-18-44` or `#covind-19-vaccination-update-45-plus`.
 
 ## Deployment
 
